@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from '@/app/page.module.css';
 import { useRouter } from 'next/navigation';
 
@@ -8,6 +8,10 @@ function Enter({ apiUrl }) {
     const [password, setPassword] = useState('');
 
     const router = useRouter();
+
+    useEffect(() => {
+        console.log(`${apiUrl}/login`);
+    }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -26,9 +30,8 @@ function Enter({ apiUrl }) {
                 body: JSON.stringify(postData)
             });
 
-            // Yanıtın JWT olduğunu varsayalım
             if (response.ok) {
-                const token = await response.text(); // JSON değil, metin alıyoruz
+                const token = await response.text();
                 document.cookie = `x-auth-token=${token}; max-age=86400`;
 
                 router.push('/admin/tables');
@@ -37,6 +40,7 @@ function Enter({ apiUrl }) {
             }
 
         } catch (err) {
+            alert('Bir sorun oldu.');
             console.error('Error: ', err);
         }
     };
